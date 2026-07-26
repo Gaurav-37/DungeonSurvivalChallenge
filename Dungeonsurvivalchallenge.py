@@ -8,6 +8,8 @@ import weapon
 import event
 
 username = ""
+class_chosen_name = ""
+weapon_name = ""
 game_state = True
 threat_level = 0
 weapon_damage = 0
@@ -16,6 +18,14 @@ base_min_damage  = 0
 base_max_damage = 0
 gold = 0
 heal_counter = 0
+rooms_completed = 0
+enemies_defeated = 0
+enemies_escaped = 0
+treasures_collected = []
+upgrade_opportunity_used = False
+upgraded_weapon_received = False
+final_rank = ""
+final_result = ""
 line = "=" * 60
 small_line = "-" * 60
 
@@ -142,16 +152,9 @@ for i in range(0,4):
                             print(f"\nMage passive activated: {mage_damage} damage dealt.")
                             print(f"{current_enemy_name} Health: {current_enemy_health}")
                         else:
-                            critical_chance = random.random()
-                            if critical_chance < 0.2:
-                                critical_damage = base_random_damage * 2
-                                current_enemy_health -= critical_damage
-                                print(f"\nCritical hit: {critical_damage} damage dealt.")
-                                print(f"{current_enemy_name} Health: {current_enemy_health}")
-                            else:
-                                current_enemy_health -= base_random_damage
-                                print(f"\nYou attack for {base_random_damage} damage.")
-                                print(f"{current_enemy_name} Health: {current_enemy_health}")
+                            current_enemy_health -= base_random_damage
+                            print(f"\nYou attack for {base_random_damage} damage.")
+                            print(f"{current_enemy_name} Health: {current_enemy_health}")
                     else:
                         critical_chance = random.random()
                         if critical_chance < 0.2:
@@ -167,8 +170,24 @@ for i in range(0,4):
                     if current_enemy_health <= 0:
                         print(f"\n{current_enemy_name} defeated.")
                         gold += current_enemy_reward
+                        enemies_defeated += 1
                         print(f"Gold gained: {current_enemy_reward}")
                         print(f"Total gold: {gold}\n")
+                        if enemies_defeated == 3 and upgrade_opportunity_used == False:
+                            upgrade_opportunity_used = True
+                            weapon_upgrade_chance = random.random()
+                            print(f"{small_line}")
+                            print("WEAPON UPGRADE")
+                            print(f"{small_line}")
+                            if weapon_upgrade_chance <= 0.4:
+                                selected_weapon = random.choice(weapon.upgraded_weapon_list)
+                                weapon_name = selected_weapon[0]
+                                weapon_damage = selected_weapon[1]
+                                upgraded_weapon_received = True
+                                print(f"You received an upgraded weapon: {weapon_name}")
+                                print(f"New Bonus Damage: +{weapon_damage}\n")
+                            else:
+                                print("No upgraded weapon was found.\n")
                         break
 
                     current_enemy_random_damage = random.randint(current_enemy_min_damage,current_enemy_max_damage)
@@ -271,6 +290,7 @@ for i in range(0,4):
                     run_chance = random.random()
                     if  run_chance <= 0.6:
                         print("\nYou escaped the enemy.")
+                        enemies_escaped += 1
                         break
                     else:
                         print("\nEscape failed.")
@@ -304,6 +324,7 @@ for i in range(0,4):
             treasure_name = treasure_order[i][0]
             treasure_gold = treasure_order[i][1]
             gold += treasure_gold
+            treasures_collected.append(treasure_name)
             print(f"\n{small_line}")
             print("TREASURE CHEST")
             print(f"{small_line}")
@@ -334,7 +355,7 @@ for i in range(0,4):
                 else:
                     print("You survived the trap.")
         elif event_selected == "Healing Fountain":
-            health_amount_random = random.randint(15,30)
+            health_amount_random = random.randint(20,45)
             base_health += health_amount_random
             print(f"\n{small_line}")
             print("HEALING FOUNTAIN")
@@ -351,9 +372,11 @@ for i in range(0,4):
         else:
             print("\nThe room is empty. You move on.")
 
+        if game_state == True:
+            rooms_completed += 1
+
 if game_state == True:
-    last_dungeon_option = random.randint(0,5)
-    last_dungeon_name = location.location_list[last_dungeon_option][0]
+    last_dungeon_name = location_order[4]
     current_enemy = enemy.enemy_list[5]
     current_enemy_name = current_enemy[0]
     current_enemy_health = int(current_enemy[1])
@@ -362,7 +385,7 @@ if game_state == True:
     current_enemy_reward = int(current_enemy[4])
     
     print(f"\n{line}")
-    print("FINAL BATTLE")
+    print(f"FINAL BATTLE: {last_dungeon_name}")
     print(f"{line}")
     print(f"\n{small_line}")
     print("BOSS ENCOUNTER")
@@ -384,16 +407,9 @@ if game_state == True:
                     print(f"\nMage passive activated: {mage_damage} damage dealt.")
                     print(f"{current_enemy_name} Health: {current_enemy_health}")
                 else:
-                    critical_chance = random.random()
-                    if critical_chance < 0.2:
-                        critical_damage = base_random_damage * 2
-                        current_enemy_health -= critical_damage
-                        print(f"\nCritical hit: {critical_damage} damage dealt.")
-                        print(f"{current_enemy_name} Health: {current_enemy_health}")
-                    else:
-                        current_enemy_health -= base_random_damage
-                        print(f"\nYou attack for {base_random_damage} damage.")
-                        print(f"{current_enemy_name} Health: {current_enemy_health}")
+                    current_enemy_health -= base_random_damage
+                    print(f"\nYou attack for {base_random_damage} damage.")
+                    print(f"{current_enemy_name} Health: {current_enemy_health}")
             else:
                 critical_chance = random.random()
                 if critical_chance < 0.2:
@@ -409,8 +425,24 @@ if game_state == True:
             if current_enemy_health <= 0:
                 print(f"\n{current_enemy_name} defeated.")
                 gold += current_enemy_reward
+                enemies_defeated += 1
                 print(f"Gold gained: {current_enemy_reward}")
                 print(f"Total gold: {gold}\n")
+                if enemies_defeated == 3 and upgrade_opportunity_used == False:
+                    upgrade_opportunity_used = True
+                    weapon_upgrade_chance = random.random()
+                    print(f"{small_line}")
+                    print("WEAPON UPGRADE")
+                    print(f"{small_line}")
+                    if weapon_upgrade_chance <= 0.4:
+                        selected_weapon = random.choice(weapon.upgraded_weapon_list)
+                        weapon_name = selected_weapon[0]
+                        weapon_damage = selected_weapon[1]
+                        upgraded_weapon_received = True
+                        print(f"You received an upgraded weapon: {weapon_name}")
+                        print(f"New Bonus Damage: +{weapon_damage}\n")
+                    else:
+                        print("No upgraded weapon was found.\n")
                 break
 
             current_enemy_random_damage = random.randint(current_enemy_min_damage,current_enemy_max_damage)
@@ -513,6 +545,7 @@ if game_state == True:
             run_chance = random.random()
             if  run_chance <= 0.6:
                 print("\nYou escaped the enemy.")
+                enemies_escaped += 1
                 break
             else:
                 print("\nEscape failed.")
@@ -542,4 +575,48 @@ if game_state == True:
                         print("\nYou have been defeated.")
                         game_state = False
                         break
+
+    if game_state == True:
+        rooms_completed += 1
+
+if gold <= 99:
+    final_rank = "Survivor"
+elif gold <= 249:
+    final_rank = "Adventurer"
+elif gold <= 449:
+    final_rank = "Treasure Hunter"
+else:
+    final_rank = "Dungeon Master"
+
+if game_state == True and base_health > 0 and rooms_completed >= 5:
+    final_result = "Victory"
+else:
+    final_result = "Defeat"
+
+remaining_health = base_health
+if remaining_health < 0:
+    remaining_health = 0
+
+print(f"\n{line}")
+print("FINAL SUMMARY")
+print(f"{line}")
+print(f"Player Name: {username}")
+print(f"Selected Class: {class_chosen_name}")
+print(f"Rooms Completed: {rooms_completed}/5")
+print(f"Enemies Defeated: {enemies_defeated}")
+print(f"Enemies Escaped From: {enemies_escaped}")
+
+if len(treasures_collected) > 0:
+    print("Treasures Collected:")
+    for treasure_item in treasures_collected:
+        print(f"- {treasure_item}")
+else:
+    print("Treasures Collected: None")
+
+print(f"Final Weapon: {weapon_name}")
+print(f"Remaining Health: {remaining_health}")
+print(f"Total Gold: {gold}")
+print(f"Final Rank: {final_rank}")
+print(f"Final Result: {final_result}")
+print(f"{line}\n")
 
