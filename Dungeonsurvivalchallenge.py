@@ -100,7 +100,8 @@ if game_state == True:
 else:
     pass
 
-location_order = random.sample(location.location_list,5)
+normal_locations = random.sample(location.location_list[:4],4)
+location_order = normal_locations + [location.dragons_lair]
 enemy_order = random.sample(enemy.enemy_list[:5],5)
 treasure_order = random.sample(treasure.treasure_list,5)
 trap_order = random.sample(trap.trap_list,4)
@@ -439,21 +440,6 @@ if game_state == True:
                 enemies_defeated += 1
                 print(f"Gold gained: {current_enemy_reward}")
                 print(f"Total gold: {gold}\n")
-                if enemies_defeated == 3 and upgrade_opportunity_used == False:
-                    upgrade_opportunity_used = True
-                    weapon_upgrade_chance = random.random()
-                    print(f"{small_line}")
-                    print("WEAPON UPGRADE")
-                    print(f"{small_line}")
-                    if weapon_upgrade_chance <= 0.4:
-                        selected_weapon = random.choice(weapon.upgraded_weapon_list)
-                        weapon_name = selected_weapon[0]
-                        weapon_damage = selected_weapon[1]
-                        upgraded_weapon_received = True
-                        print(f"You received an upgraded weapon: {weapon_name}")
-                        print(f"New Bonus Damage: +{weapon_damage}\n")
-                    else:
-                        print("No upgraded weapon was found.\n")
                 break
 
             current_enemy_random_damage = random.randint(current_enemy_min_damage,current_enemy_max_damage)
