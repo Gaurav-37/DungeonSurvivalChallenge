@@ -131,7 +131,7 @@ for i in range(0,4):
         
         event_selected = event_order[i]
         print(f"Event: {event_selected}")
-        print(f"Health: {base_health} | Gold: {gold} | Weapon: {weapon_name} (+{weapon_damage})")
+        print(f"Health: {base_health} | Gold: {gold} | Weapon: {weapon_name} (+{weapon_damage}) | Heals Left: {3 - heal_counter}")
 
         if event_selected == "Enemy":
             
@@ -399,6 +399,7 @@ if game_state == True:
     print(f"\n{line}")
     print(f"FINAL BATTLE: {last_dungeon_name}")
     print(f"{line}")
+    print(f"Health: {base_health} | Gold: {gold} | Weapon: {weapon_name} (+{weapon_damage}) | Heals Left: {3 - heal_counter}")
     print(f"\n{small_line}")
     print("BOSS ENCOUNTER")
     print(f"{small_line}")
