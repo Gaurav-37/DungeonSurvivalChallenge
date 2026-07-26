@@ -24,6 +24,7 @@ enemies_escaped = 0
 treasures_collected = []
 upgrade_opportunity_used = False
 upgraded_weapon_received = False
+escaped_final_battle = False
 final_rank = ""
 final_result = ""
 line = "=" * 60
@@ -38,12 +39,22 @@ username = input("Enter your hero name: ").strip()
 while username.strip() == "":
     print("\nName cannot be empty. Please try again.\n")
     username = input("Enter your hero name: ").strip()
-    game_state = False
 else:
     print(f"\nWelcome, {username}.\n")
 
 if game_state == True: 
-    class_option = int(input(f"{small_line}\nCHOOSE YOUR CLASS\n{small_line}\n1. Warrior\n   Health: {hero.hero_list[0][1]}\n   Damage: {hero.hero_list[0][2]}-{hero.hero_list[0][3]}\n   Passive: Reduces enemy damage by 5\n\n2. Mage\n   Health: {hero.hero_list[1][1]}\n   Damage: {hero.hero_list[1][2]}-{hero.hero_list[1][3]}\n   Passive: 25% chance to deal double damage\n\n3. Rogue\n   Health: {hero.hero_list[2][1]}\n   Damage: {hero.hero_list[2][2]}-{hero.hero_list[2][3]}\n   Passive: 25% chance to evade enemy attacks and 30% chance to avoid trap damage\n\nEnter 1, 2, or 3: "))-1
+    class_input = input(f"{small_line}\nCHOOSE YOUR CLASS\n{small_line}\n1. Warrior\n   Health: {hero.hero_list[0][1]}\n   Damage: {hero.hero_list[0][2]}-{hero.hero_list[0][3]}\n   Passive: Reduces enemy damage by 5\n\n2. Mage\n   Health: {hero.hero_list[1][1]}\n   Damage: {hero.hero_list[1][2]}-{hero.hero_list[1][3]}\n   Passive: 25% chance to deal double damage\n\n3. Rogue\n   Health: {hero.hero_list[2][1]}\n   Damage: {hero.hero_list[2][2]}-{hero.hero_list[2][3]}\n   Passive: 25% chance to evade enemy attacks and 30% chance to avoid trap damage\n\nEnter 1, 2, or 3: ").strip()
+    if class_input == "1":
+        class_option = 0
+    elif class_input == "2":
+        class_option = 1
+    elif class_input == "3":
+        class_option = 2
+    else:
+        print("\nInvalid class selection.\n")
+        game_state = False
+
+if game_state == True:
     class_chosen_name = hero.hero_list[class_option][0]                     
     base_health += hero.hero_list[class_option][1]
     base_min_damage += hero.hero_list[class_option][2]
@@ -54,8 +65,6 @@ if game_state == True:
     print(f"Class: {class_chosen_name}")
     print(f"Health: {base_health}")
     print(f"Damage: {base_min_damage}-{base_max_damage}\n")
-else:
-    print("\nInvalid selection.\n")
 
 
 if game_state == True:
@@ -320,6 +329,8 @@ for i in range(0,4):
                                 print("\nYou have been defeated.")
                                 game_state = False
                                 break
+                else:
+                    print("\nInvalid action. Choose attack, defend, heal, or run.")
         elif event_selected == "Treasure":
             treasure_name = treasure_order[i][0]
             treasure_gold = treasure_order[i][1]
@@ -546,6 +557,7 @@ if game_state == True:
             if  run_chance <= 0.6:
                 print("\nYou escaped the enemy.")
                 enemies_escaped += 1
+                escaped_final_battle = True
                 break
             else:
                 print("\nEscape failed.")
@@ -575,6 +587,8 @@ if game_state == True:
                         print("\nYou have been defeated.")
                         game_state = False
                         break
+        else:
+            print("\nInvalid action. Choose attack, defend, heal, or run.")
 
     if game_state == True:
         rooms_completed += 1
@@ -588,8 +602,10 @@ elif gold <= 449:
 else:
     final_rank = "Dungeon Master"
 
-if game_state == True and base_health > 0 and rooms_completed >= 5:
+if game_state == True and base_health > 0 and rooms_completed >= 5 and escaped_final_battle == False:
     final_result = "Victory"
+elif escaped_final_battle == True:
+    final_result = "Escaped"
 else:
     final_result = "Defeat"
 
